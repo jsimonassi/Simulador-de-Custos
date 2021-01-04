@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  .title {
+    font-family: Tahoma, sans-serif;
+    text-align: center;
+  }
+
+  .container {
+    font-family: Tahoma, sans-serif;
+    max-width: 800px;
+    max-height: 640px;
+  }
+
+  .box {
+    background-color: #e6e6e6;
+    margin: 5px;
+    border-radius: 5px;
+    padding-top: 3px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .options {
+    width: 100%;
+    border: none;
+    border-radius: 3px;
+    height: 30px;
+  }
+
+  .button {
+    background-color: #008CBA;
+    width: 95%;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+  .inner-box {
+    background-color: #aaaaaa;
+    border-radius: 3px;
+    margin: 0;
+    max-height: 350px;
+    overflow: scroll;
+  }
+
+  .container-infos {
+    background-color: #ffffff;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 0.1px;
+    font-size: 9pt;
+  }
+
+  .max-min {
+    width: 100%;
+    text-align: center;
+  }
+
+  .min {
+    float: left;
+    width: 33%;
+    background-color: #A9F5A9;
+    border-radius: 10px 0 0 10px;
+  }
+
+  .med {
+    float: left;
+    width: 33%;
+    background-color: #F2F5A9;
+  }
+
+  .max {
+    float: left;
+    width: 33%;
+    background-color: #F7819F;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .results {
+    display: none;
+  }
+</style>
+
+<head>
+  <title>Simulador de custo</title>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h3 class="title">Simulador de custo</h3>
+
+    <div class="box">
+      <div>
+        <p style="margin-bottom: -10px;">Escolha o padrão da residência: </p>
+        <p style="font-size: 7pt;">PADRÃO RESIDENCIAIS - Base CUB/m² de Março/2020 - R8</p>
+      </div>
+      <div>
+        <select id="standard" name="standard" class="options">
+          <option value="baixo">Baixo - R$ 1.400,68</option>
+          <option value="medio">Medio - R$ 1.588,93</option>
+          <option value="alto">Alto - R$ 1.878,72</option>
+
+        </select>
+      </div>
+    </div>
+
+    <div class="box">
+      <p>Tamanho da residência (M²):</p>
+      <input type="number" id="size" name="size" placeholder="Ex: 80" class="options">
+      <small id="error-message" style="color:brown; display: none;">O tamanho da residência deve ser maior que 0</small>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="button" onclick="calcular()">Calcular</button>
+    </div>
+
+    <div id="results" class="results">
+      <div class="box">
+        <p style="font-weight: bold;">Estimativa total:</p>
+        <h2 id="result">R$ 00,00</h2>
+
+        <div id="details" name="details" class="box inner-box">
+          <p>Custo detalhado:</p>
+
+
+          <div class="container-infos">
+            <p>Projeto, aprovações na prefeitura e outras burocracias</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">3%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average0" value="4">4%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">5%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost0">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos" style="background-color: #E6E6E6;">
+            <p>Preparações preliminares</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">3%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average1" value="3">3%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">3%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost1">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos">
+            <p>Fundações</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">3%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average2" value="5">5%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">7%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost2">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos" style="background-color: #E6E6E6;">
+            <p>Estrutura</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">12%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average3" value="16">16%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">20%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost3">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos">
+            <p>Fechamentos</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">10%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average4" value="15">15%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">19%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost4">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos" style="background-color: #E6E6E6;">
+            <p>Cobertura</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">3%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average5" value="4">4%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">5%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost5">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos">
+            <p>Instalações elétricas</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">8%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average6" value="10">10%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">12%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost6">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos" style="background-color: #E6E6E6;">
+            <p>Instalações hidráulicas/esgoto</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">9%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average7" value="12">12%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">12%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost7">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos">
+            <p>Acabamentos internos e externos</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">20%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average8" value="29">29%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">38%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost8">R$ 00,00</p>
+            </div>
+          </div>
+
+          <div class="container-infos" style="background-color: #E6E6E6;">
+            <p>Limpeza, retoques e arremates</p>
+            <div class="max-min">
+              <div class="min">Mínima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">1%</p>
+              </div>
+              <div class="med">Média<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;"
+                  id="average9" value="2">2%</p>
+              </div>
+              <div class="max">Máxima<p style="font-size: 11pt; font-weight: bold; margin: 0; padding: 5px;">2%</p>
+              </div>
+              <br style="clear: left;" />
+              <p style="font-size: 12pt; font-weight: bold; padding: 15px; margin: 0;" id="cost9">R$ 00,00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <p style="font-weight: bold;">Totais:</p>
+
+        <div class="box inner-box" style="background-color: #A9F5A9; ">
+          <div>
+            <div style="float: left;">Total de % mínima: </div>
+            <div style="float: left; font-weight: bold;"> 72%</div>
+          </div>
+          <br>
+          <p style="font-weight: bold; font-size: 14pt;" id="min-amount">R$ 00,00</p>
+        </div>
+        <br>
+        <div class="box inner-box" style="background-color: #F2F5A9 ">
+          <div>
+            <div style="float: left;">Total de % média: </div>
+            <div style="float: left; font-weight: bold;"> 100%</div>
+          </div>
+          <br>
+          <p style="font-weight: bold; font-size: 14pt;" id="amount">R$ 00,00</p>
+        </div>
+        <br>
+        <div class="box inner-box" style="background-color: #F7819F">
+          <div>
+            <div style="float: left;">Total de % máxima: </div>
+            <div style="float: left; font-weight: bold;"> 123%</div>
+          </div>
+          <br>
+          <p style="font-weight: bold; font-size: 14pt;" id="max-amount">R$ 00,00</p>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <div class="box inner-box" style="background-color: #aaaaaa">
+          <div>
+            <div style="float: left;">Mão-de-obra: </div>
+            <div style="float: left; font-weight: bold;"> 40%</div>
+          </div>
+          <br>
+          <p style="font-weight: bold; font-size: 14pt;" id="labor">R$ 00,00</p>
+        </div>
+        <br>
+        <div class="box inner-box" style="background-color: #aaaaaa">
+          <div>
+            <div style="float: left;">Material: </div>
+            <div style="float: left; font-weight: bold;"> 60%</div>
+          </div>
+          <br>
+          <p style="font-weight: bold; font-size: 14pt;" id="material">R$ 00,00</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+<script>
+  let size = document.getElementById("size");
+  let standard = document.getElementById("standard");
+  let result = document.getElementById("result");
+  let resMinAmount = document.getElementById("min-amount");
+  let resAmount = document.getElementById("amount");
+  let resMaxAmount = document.getElementById("max-amount");
+  let labor = document.getElementById("labor");
+  let material = document.getElementById("material");
+  var baixo = 1400.68;
+  var medio = 1588.93;
+  var alto = 1878.72;
+  let amount = 0;
+
+
+  function generateFormatedResult(value, standard) {
+
+    if (value == "" || standard == "") {
+      return "R$ 00,00";
+    }
+
+    if (standard === "baixo") {
+      amount = value * baixo;
+      return parseFloat((value * baixo).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    } else if (standard === "medio") {
+      amount = value * medio;
+      return parseFloat((value * medio).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    }
+    amount = value * alto;
+    return parseFloat((value * alto).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  }
+
+  function generateAndPublishDetailedCost() {
+    let costs = [document.getElementById("cost0"), document.getElementById("cost1"), document.getElementById("cost2"), document.getElementById("cost3"),
+    document.getElementById("cost4"), document.getElementById("cost5"), document.getElementById("cost6"), document.getElementById("cost7"),
+    document.getElementById("cost8"), document.getElementById("cost9")];
+
+    let averages = [document.getElementById("average0"), document.getElementById("average1"), document.getElementById("average2"), document.getElementById("average3"),
+    document.getElementById("average4"), document.getElementById("average5"), document.getElementById("average6"), document.getElementById("average7"),
+    document.getElementById("average8"), document.getElementById("average9")];
+
+    for (let i = 0; i < costs.length; i++) {
+      costs[i].innerHTML = parseFloat((amount * (averages[i].getAttribute("value") / 100)).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    }
+  }
+
+  function generateAndPublishOtherAmounts() {
+    resMinAmount.innerHTML = parseFloat((amount * (72 / 100)).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    resAmount.innerHTML = parseFloat(amount.toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    resMaxAmount.innerHTML = parseFloat((amount * (123 / 100)).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  }
+
+  function generateAndPublishLaborAndMaterial() {
+    labor.innerHTML = parseFloat((amount * (40 / 100)).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    material.innerHTML = parseFloat((amount * (60 / 100)).toFixed(2)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  }
+
+  function fadein(element) {
+    var op = 0.1;
+    var timer = setInterval(function () {
+      if (op >= 1) {
+        clearInterval(timer);
+      }
+      element.style.opacity = op;
+      element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+      op += op * 0.1;
+      element.style.display = 'block';
+    }, 30);
+  }
+
+  function fadeout(element) {
+    var op = 1;
+    var timer = setInterval(function () {
+        if (op <= 0.1){
+            clearInterval(timer);
+            element.style.display = 'none';
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 50);
+}
+
+  function calcular() {
+
+    if (size.value !== "" && parseInt(size.value) >= 0) {
+      fadeout(document.getElementById("error-message"));
+      result.innerHTML = generateFormatedResult(size.value, standard.value);
+      generateAndPublishDetailedCost();
+      generateAndPublishOtherAmounts();
+      generateAndPublishLaborAndMaterial();
+      fadein(document.getElementById("results"));
+      return;
+    }
+    fadein(document.getElementById("error-message"));
+  }
+
+</script>
+</html>
